@@ -187,15 +187,21 @@ One question (#6) resulted in moderate hallucination because retrieval pulled pa
 
 ---
 
-## Summary
+## Unnecessary Summary
 
 This RAG system successfully demonstrates how embedding-based retrieval and lightweight generation can support question answering over a small and messy patent corpus. Retrieval performance was strong, with relevant text consistently ranked first, but answer support varied, and mild hallucinations were common. The system is appropriate for **educational exploration** but should not be used for legal or production purposes.
 
+---
+
+## Pipeline
 User Question → Embedding → Retriever (k=5) → Relevant Chunks
                                           ↓
                             Generator (gpt-4.1-mini)
                                           ↓
                                Final Answer (RAG)
 
-AI Assistance Disclaimer:
+---
+
+## AI Assistance Disclaimer:
+
 Portions of this project, including select code snippets, formatting suggestions, and text drafting, were assisted by ChatGPT (OpenAI). I reviewed, modified, and approved all generated material, and I accept all work as my own and am fully responsible for the outputs, interpretations, and decisions presented in this repository.
