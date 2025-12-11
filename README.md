@@ -2,8 +2,8 @@
 
 ## Basic information
 
-- **Group members:** Jack Sullivan (jacksullivan@gwu.edu)  
-- **Date:** 2025-12-11  
+- **Group members:** Jack Sullivan (j.sullivan1@gwu.edu)  
+- **Date:** 2025-12-10  
 - **Model version:** v1.0 (first complete RAG pipeline)
 - **License:** MIT  
 - **Model implementation code:**  
@@ -11,6 +11,8 @@
   - `notebooks/02_chunk.ipynb`
   - `notebooks/03_embeddings.ipynb`
   - `notebooks/04_rag_qa.ipynb`
+  https://github.com/wol-jsull/RAGPROJ/tree/main/notebooks
+
 - **Intended use:**
   - **Intended uses:**  
     - Interactive Q&A over a small set of US patent PDFs.  
@@ -26,19 +28,18 @@
 ## Training data (for retrieval index)
 
 - **Source of data:**  
-  - ~20 US patent PDFs selected for the class project.  
+  - 33 US patent PDFs selected for the class project sourced from Google Patents 
+  - A mix of famous and msicellaneous new AI implementations patents.
   - Topics include: large/small LLM interaction, natural language generation, LLM training loops, dialogue systems, multimodal architectures, and transformer encoders.
 
 - **How data was divided into training/validation:**  
-  - No supervised training is performed.  
-  - The embedding model (`all-MiniLM-L6-v2`) is pretrained by SentenceTransformers.  
-  - The OpenAI generator (`gpt-4.1-mini`) is pretrained.  
-  - This project only builds a **retrieval index**, not a trained classifier.  
-  - Evaluation is performed via a small set of manually constructed test questions.
+  - No supervised training is performed, and thus data not divided into training/validation.
+  - Embedding Models and OpenAI have been pretrained.
+  - Either text loaded from pdfs or manually put into txt files.
 
 - **Number of rows:**  
-  - Documents (patents): **20**  
-  - Text chunks for retrieval: **≈ 430** (from `patent_chunks.jsonl`)
+  - Documents (patents): **33**  
+  - Text chunks for retrieval: **≈ 2905** (from `patent_chunks.jsonl`)
 
 - **Data dictionary (columns in the chunk index):**
   - `id` – unique chunk identifier (string, e.g., `"US11562147_41"`)  
@@ -57,7 +58,7 @@
   - **8** test questions.
 
 - **Differences from training data:**  
-  - The “training data” is simply the patent corpus used for retrieval.  
+  - The “training data” is simply the patents used for retrieval.  
   - The “test data” consists of independently written questions whose answers must be retrieved from the patent text.
 
 ---
@@ -80,8 +81,8 @@
   - Python 3.12  
   - `sentence-transformers`  
   - `numpy`  
-  - `scikit-learn`  
-  - `openai`  
+  - `scikit-learn` 
+  - `openai`
 
 - **Hyperparameters / settings:**
   - Chunk size: **300 words**  
@@ -129,7 +130,7 @@ Across **8 test questions**:
 | Severe | 0% | 0 |
 
 Most hallucinations were minor expansions of what was implied but not stated.  
-One question (#6) resulted in moderate hallucination because retrieval pulled patents unrelated to multimodal inputs.
+One question (#6) resulted in moderate hallucination because retrieval pulled patents unrelated to multimodal inputs. Overall still well grounded at least in chunks pulled.
 
 ---
 
@@ -138,7 +139,7 @@ One question (#6) resulted in moderate hallucination because retrieval pulled pa
 ### **Limitations of This System**
 
 - **Small corpus**  
-  Only ~20 patents; retrieval coverage is inherently limited.
+  Only ~33 patents; retrieval coverage is inherently limited.
 
 - **Text extraction issues**  
   Several patents had broken or missing text due to:
@@ -181,8 +182,8 @@ One question (#6) resulted in moderate hallucination because retrieval pulled pa
 
 ## Unexpected results
 
-- Some patents with long formulas, diagrams, or image-heavy layouts produced **zero extractable text**, requiring manual patching.
-- Retrieval strongly favored a few patents with very dense LLM descriptions, potentially skewing results.
+- Some patents with long formulas, diagrams, or image-heavy layouts produced **zero extractable text**, requiring manual patching. Patent text pasted in with Adobe OCR.
+- Retrieval strongly favored a few patents with very dense LLM descriptions, potentially skewing results. Some patents more relevant than others.
 
 ---
 
@@ -190,3 +191,11 @@ One question (#6) resulted in moderate hallucination because retrieval pulled pa
 
 This RAG system successfully demonstrates how embedding-based retrieval and lightweight generation can support question answering over a small and messy patent corpus. Retrieval performance was strong, with relevant text consistently ranked first, but answer support varied, and mild hallucinations were common. The system is appropriate for **educational exploration** but should not be used for legal or production purposes.
 
+User Question → Embedding → Retriever (k=5) → Relevant Chunks
+                                          ↓
+                            Generator (gpt-4.1-mini)
+                                          ↓
+                               Final Answer (RAG)
+
+AI Assistance Disclaimer:
+Portions of this project, including select code snippets, formatting suggestions, and text drafting, were assisted by ChatGPT (OpenAI). I reviewed, modified, and approved all generated material, and I accept all work as my own and am fully responsible for the outputs, interpretations, and decisions presented in this repository.
