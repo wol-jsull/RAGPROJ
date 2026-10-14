@@ -1,0 +1,295 @@
+{
+  "_about": [
+    "Small known-item retrieval evaluation set (v1, 2026-10-14).",
+    "Each in-scope query paraphrases the subject of one patent's abstract/title (as extracted in data/processed/txt), mostly avoiding the title's exact wording, and is labeled with that patent as relevant.",
+    "Queries of type 'lay_language' deliberately use everyday wording that differs from the patent text (vocabulary mismatch), to test meaning-based matching rather than shared keywords.",
+    "Patent families with near-identical content (US8332207/US8812291 and US9037464/US9740680) list both members as relevant.",
+    "Labels are single-annotator and were drafted with AI assistance while preparing the project for review; they should be reviewed by the project owner. Other patents may also be partially relevant to a query; this set only measures whether the target patent is found.",
+    "Out-of-scope queries have no relevant patent in the corpus and are used to calibrate the relevance threshold."
+  ],
+  "in_scope": [
+    {
+      "query": "A neural network that converts an input sequence to an output sequence using attention layers instead of recurrence",
+      "relevant": [
+        "US10452978"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Applying the same self-attention block repeatedly in depth, with a decision about when to stop refining representations",
+      "relevant": [
+        "US10740433"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Removing impulse noise from color photographs using a spatial autocorrelation statistic and a vector median filter",
+      "relevant": [
+        "US10902563"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Training a document retriever jointly with a language model so it can fetch knowledge from a large text corpus",
+      "relevant": [
+        "US11003865"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Recognizing facial expressions from both a three-dimensional and a two-dimensional image of a face",
+      "relevant": [
+        "US11023715"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "An attention layer where some positions attend to every position while the other positions attend differently, to handle long inputs",
+      "relevant": [
+        "US11238332"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Extracting information from images of a device's user interface display captured by a camera",
+      "relevant": [
+        "US11295552"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Scrambling image blocks while avoiding visible artifacts at the edges of the blocks",
+      "relevant": [
+        "US11328398"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Answering a series of questions about an image during a multi-turn conversation with a BERT-initialized model",
+      "relevant": [
+        "US11562147"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Editing the semantic layout of a scene and generating a realistic high-resolution image that follows the edited layout",
+      "relevant": [
+        "US11636570"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "A cooling liquid composition for battery packs",
+      "relevant": [
+        "US11749857"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Pre-training a model on source code and transferring it to software development tasks",
+      "relevant": [
+        "US11900261"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Combining data from two different kinds of sensors with a transformer that relates features across modalities",
+      "relevant": [
+        "US11921824"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Detecting acoustic events in audio using a recurrent network with memory-efficient self-attention",
+      "relevant": [
+        "US11961514"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Giving a large language model extra context from a structured machine-readable universal language representation",
+      "relevant": [
+        "US11989527"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Requesting tiles of a 360-degree immersive video depending on what part the viewer is looking at",
+      "relevant": [
+        "US11991338"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "A spoken-dialog assistant that uses a large language model to modify its candidate responses using conversation context",
+      "relevant": [
+        "US12148421"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Filling parameters of a prompt template to have an LLM write text for a section of a website",
+      "relevant": [
+        "US12182506"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Predicting image quality on native-resolution images using patches at several scales and a transformer",
+      "relevant": [
+        "US12217382"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Replacing dot-product attention with gating and pooling operations to reduce time and memory complexity",
+      "relevant": [
+        "US12271791B2"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Transferring the appearance of one image onto the structure of another using features from a fixed pretrained vision transformer",
+      "relevant": [
+        "US12282696B2"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Interpretable clinical outcome prediction from medical notes using a hierarchical convolutional and transformer model",
+      "relevant": [
+        "US20210183484A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Identifying relationships among words with transformer language networks trained on domain-specific data",
+      "relevant": [
+        "US20220101113A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Automatically drafting a patent application with a generative transformer from a title and summary",
+      "relevant": [
+        "US20230252224A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Using an LLM to create synthetic user queries for training a task-oriented conversational agent",
+      "relevant": [
+        "US20240185001A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Generating personalized text descriptions customized to a user's attributes with an LLM prompt",
+      "relevant": [
+        "US20240256792A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "A large language model trains, evaluates and augments a smaller natural language generation model",
+      "relevant": [
+        "US20240346254A1"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "An n-gram language model with backoff scores used for machine translation",
+      "relevant": [
+        "US8332207",
+        "US8812291"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Learning numeric vector representations of words from the words that surround them",
+      "relevant": [
+        "US9037464",
+        "US9740680"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Adding guidance mechanisms to requests so one large model can perform custom tasks without retraining",
+      "relevant": [
+        "US_12380282_B2"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "Translating natural language descriptions into an unambiguous constrained language that can be executed as a program",
+      "relevant": [
+        "US_12417081_B2"
+      ],
+      "type": "abstract_paraphrase"
+    },
+    {
+      "query": "How can a chatbot answer questions about pictures?",
+      "relevant": [
+        "US11562147"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "How can a computer learn the meaning of words from large amounts of text?",
+      "relevant": [
+        "US9037464",
+        "US9740680"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "Software that writes a patent filing for an inventor",
+      "relevant": [
+        "US20230252224A1"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "Making a voice assistant's replies better with a big AI model",
+      "relevant": [
+        "US12148421"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "A small AI model learning from a bigger one",
+      "relevant": [
+        "US20240346254A1"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "Telling whether a photo looks good or bad",
+      "relevant": [
+        "US12217382"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "Keeping electric car batteries from overheating",
+      "relevant": [
+        "US11749857"
+      ],
+      "type": "lay_language"
+    },
+    {
+      "query": "Letting people write computer programs in plain English",
+      "relevant": [
+        "US_12417081_B2"
+      ],
+      "type": "lay_language"
+    }
+  ],
+  "out_of_scope": [
+    "What does this collection say about CRISPR gene editing in crops?",
+    "What is the boiling point of water at high altitude?",
+    "How do I register a trademark in the European Union?",
+    "What is a good recipe for sourdough bread?",
+    "Who won the 2018 FIFA World Cup?"
+  ]
+}

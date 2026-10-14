@@ -1,0 +1,14 @@
+# App + pipeline
+numpy>=1.24
+scikit-learn>=1.3
+sentence-transformers>=2.2   # pulls in PyTorch; downloads all-MiniLM-L6-v2 (~90 MB) on first run
+openai>=1.30
+streamlit>=1.40
+
+# Tests
+pytest>=7.4
+
+# Only needed to re-run the notebooks (PDF extraction, evaluation tables)
+pdfminer.six>=20221105
+pypdf>=3.0
+pandas>=2.0

@@ -1,0 +1,12 @@
+[server]
+# Only reachable from this machine during the demo (Streamlit otherwise listens on all interfaces).
+address = "localhost"
+port = 8501
+
+[browser]
+gatherUsageStats = false
+
+[client]
+# Hide developer tracebacks from the UI; errors are logged in the terminal instead.
+showErrorDetails = false
+toolbarMode = "minimal"
