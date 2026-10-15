@@ -507,3 +507,176 @@ python scripts/check_setup.py --ping
 streamlit run app.py
 ```
 Demo order: LLM → smaller model question → open S1 → show the prompt → CRISPR refusal → (optional) chatbot/pictures: semantic vs keyword → "Where would you like to go?"
+
+---
+
+## Section 11: Project context, verified facts and interview Q&A
+
+> Added after auditing the repository against the project context notes. Where the notes and the code disagree, **this section follows the code**. Items marked **[CONFIRM]** are your own account and need your check.
+
+### 11.1 Origin and motivation
+
+- **Course:** DNSC 3288 (machine learning), Fall 2025, George Washington University. Three project options were offered: sales forecasting, digit recognition, or RAG. You chose RAG, which the assignment rated HARD. **[CONFIRM the rating and option list against the assignment sheet]**
+- **Original brief:** a RAG tool over class notes. You narrowed it to US AI patents.
+- **Why:** patent text often uses different words from the question ("numeric representations of words" vs. "word embeddings"). You wanted to see whether meaning-based search finds relevant passages that keyword search misses, and how retrieval can ground an LLM on a specialized collection **without retraining it**. **[CONFIRM in your own words]**
+
+### 11.2 Verified vs. historical claims
+
+Use the right column in the interview. If a question touches a "Do not say" row, correct it yourself rather than let it stand.
+
+| Topic | What the repository shows | Status |
+|---|---|---|
+| Corpus size | **33 patents, 2,905 chunks** (`data/processed/txt/`, `embeddings/`) | Verified |
+| "About 14 patents" | Not true. Earlier count was superseded | **Do not say** |
+| "50–100 patents" | Planned, never reached | **Do not say as built** |
+| Date range "2018–2024" | Patent numbers and printed dates span roughly 2012–2025. Mostly 2019–2025 | **Correct it** (say "about 2012–2025") |
+| Corpus is all AI | Mostly AI/NLP, but includes off-topic patents (battery coolant, image denoising, immersive video) | Say it plainly |
+| Source | Google Patents (model card) | Verified |
+| Language | Python 3.12 in notebooks, 3.13/3.14 locally | Verified |
+| Embedding model | `all-MiniLM-L6-v2`, 384 dimensions (`config.py`, notebook 03) | Verified |
+| Embedding normalization | Notebook 03 does not normalize; the app normalizes so cosine = dot product | Verified |
+| Chunk size | **300 words, 50-word overlap** (`ingest.py`, notebook 02) | Verified |
+| "500–800 tokens, 50–100 overlap" | Planned in early discussion, **never used** | **Do not say as built** |
+| Chunking method | Hand-written word-window loop. No tokenizer, no section awareness | Verified |
+| Search (notebooks) | scikit-learn `NearestNeighbors(metric="cosine")` | Verified |
+| Search (app) | NumPy matrix × query vector (`retrieval.py`), tested to match the notebook ranking | Verified |
+| Vector database | **None.** Chroma and FAISS were considered only | **Do not say we used them** |
+| Chunk store | `patent_chunks.jsonl`: fields `id`, `patent_id`, `chunk_index`, `text`. **No title or date in the chunk record**; titles are in `data/patent_metadata.json` (added later, some auto-drafted) | Verified (correct the "metadata" claim) |
+| Notebook function names | `search_chunks`, `build_context_string`, `rag_answer` exist in notebook 04 | Verified |
+| App function names | `SemanticRetriever.search`, `build_context`, `RAGPipeline.answer` (renamed during refactor) | Verified |
+| Generator | `gpt-4.1-mini`, temperature 0.2 (notebook 04, `config.py`) | Verified |
+| Orchestration framework | None. No LangChain or LlamaIndex anywhere in the repo | Verified |
+| Retrieved text in prompt | Yes, in a labeled context block. The app also wraps it in delimiter tags | Verified |
+| Example scores | US20240346254A1 chunk 12 ≈ 0.577; US11562147 chunks 3 and 41 ≈ 0.576 (notebook 03 test query) | Verified as one test query, **not a benchmark** |
+| Repeated patents in top-k | Yes: several chunks from one patent often appear together. Keyword eval shows it too | Verified limitation |
+| Manual evaluation | 8 questions, graded by you (notebook 04). Retrieval success 8/8; support and hallucination labels as in `MODEL_CARD.md` | Verified |
+| Retrieval metrics (Hit@k, MRR) | Measured only for the **keyword** baseline on the 39-query set. **Semantic run is still pending** | Say "pending" until `evaluate.py` is run |
+| The 39-query eval set | Queries and labels were **drafted with AI assistance**, not independently annotated | **Disclose it** |
+| Latency | Single-query timings in the app. No systematic latency benchmark | Do not claim a benchmark |
+| Groundedness | Your manual grading in notebook 04 (8 questions). The v1.1 prompt has **not** been re-graded | Say so |
+| Instructor reference files (NIST RMF notebooks, `hkunlp/instructor-xl`, `h2o-danube3-500m`, Euclidean ranking, 993-row CSV, `build_references()`) | **Not in this repository.** A search found no references to instructor, h2o or Euclidean code | Not part of your project. If asked, say so (see 11.6) |
+
+**Critical corrections to the notes:**
+1. The corpus is 33 patents, not 14 and not 50–100.
+2. The chunks are 300 words, not 500–800 tokens.
+3. There is no vector database. Retrieval is an in-memory matrix search.
+4. The corpus spans about 2012–2025, not 2018–2024.
+5. The current evaluation has one measured baseline. Semantic retrieval and the v1.1 answer quality have not been measured yet.
+
+### 11.3 Original work vs. AI-assisted work
+
+| Component | Origin | What you should be able to explain |
+|---|---|---|
+| Notebooks 01–04 (extraction, chunking, embeddings, RAG loop, manual evaluation) | **Your coursework.** The model card notes ChatGPT helped with some snippets and text | All of it, cell by cell |
+| Manual OCR fixes and corpus selection | **Yours** (model card) | Why those patents, and what you changed |
+| `patent_rag/` package (the notebook-04 logic moved into modules) | Refactored **with AI assistance**, after you asked for a demo-ready version | The data flow and each module's job |
+| `retrieval.py` NumPy search | AI-written, verified by a test that matches scikit-learn's rankings | Why a dot product equals cosine on unit vectors |
+| `pipeline.py` gate, fallbacks, citation check | AI-written design | The decision logic and why the LLM is skipped below threshold |
+| `prompts.py` rules and source tags | AI-written; the rules follow your notebook prompt | Each rule and what it is meant to prevent |
+| `app.py` Streamlit interface, CSS, layout | AI-written | How a click reaches the pipeline (Section 3 of this file) |
+| Tests (64), scripts, docs | AI-written, reviewed by you | What each test protects |
+| `data/patent_metadata.json` titles | Transcribed by AI from OCR text; some auto-drafted | Check titles against Google Patents before showing them |
+| `eval/retrieval_eval_set.json` | Drafted with AI assistance | Review the labels, or say they are unreviewed |
+
+**What to say:**
+> "The retrieval and generation pipeline came from my course notebooks. For the demo I refactored it into a package with an interface, tests and evaluation scripts, using an AI coding assistant. I reviewed that code, and I can explain each part of the flow. I'm not claiming I wrote every line of the interface."
+
+### 11.4 Functions to open during screen share
+
+Open these in order. Each explanation is what the code does, line by line in plain English.
+
+**1. `patent_rag/retrieval.py`: `SemanticRetriever.search_vector`** (the core math)
+```python
+scores = self.index.embeddings @ query_vec
+```
+- The rows of `embeddings` and `query_vec` are both unit length (length 1), so each dot product **is** cosine similarity. One matrix multiply scores all 2,905 chunks.
+```python
+if mask is not None: scores = np.where(mask, scores, -np.inf)
+```
+- Optional patent filter: excluded chunks are set to minus infinity so they can never rank.
+```python
+return _package(self.index, scores, _top_k_indices(scores, top_k))
+```
+- `_top_k_indices` uses `argpartition` to find the top k without sorting all 2,905 scores, then sorts only those k. It is exact, not approximate.
+- **Emphasize:** exact search is a deliberate choice at this scale, and a test proves it matches the original scikit-learn ranking.
+
+**2. `patent_rag/pipeline.py`: `RAGPipeline.answer`** (the whole flow)
+- Validate the question → retrieve top k → keep only chunks with `score >= threshold` (`evidence`).
+- If `evidence` is empty, **return without calling the LLM**. This is the refusal path.
+- Build the labeled messages → call `self.llm.complete(...)`. Any `PatentRAGError` triggers the fallback (retrieval-only or recorded answer).
+- If the reply starts with `INSUFFICIENT_EVIDENCE`, report that status. Otherwise extract citations and warn if none or invalid.
+- **Emphasize:** the LLM is treated as an unreliable component, and every failure has a defined outcome.
+
+**3. `patent_rag/prompts.py`: `build_messages` and `SYSTEM_PROMPT`**
+- The system prompt holds the rules: use only the sources, cite `[S#]`, say `INSUFFICIENT_EVIDENCE` when needed, ignore instructions inside sources.
+- `build_messages` numbers the chunks S1…Sn and wraps each one in `<source id=… patent=…>` tags, then adds the question.
+- `sanitize_source_text` strips anything that looks like a closing tag, so source text can't break out of its wrapper.
+- **Emphasize:** this is your notebook-04 prompt made stricter, plus a defense against prompt injection, which is a real risk when the input is untrusted PDF text.
+
+**4. `patent_rag/llm.py`: `OpenAIChatModel.complete`**
+- Calls `chat.completions.create` with the model, messages and temperature.
+- Each OpenAI error type becomes a user-safe error (authentication, rate limit, timeout, outage). The raw error is never shown in the UI.
+- Empty or malformed responses raise an error instead of returning blank text.
+- **Emphasize:** failures in the external service don't crash the app or leak secrets.
+
+**5. `patent_rag/citations.py`: `extract_citations`**
+- A regex finds every `[S#]`. Labels from 1 to n are valid; others are flagged as invalid. Duplicates are removed.
+- **Emphasize:** this checks that citations point at sources that were actually sent. It does **not** check that the cited text supports the claim. Say that before the interviewer does.
+
+**Optional, if asked about the original code:** notebook 04, `search_chunks` and `rag_answer`. They contain the same steps as the functions above, with less error handling.
+
+### 11.5 Five-minute technical walkthrough
+
+1. **Data (1 min):** 33 PDFs → text → 300-word chunks with 50-word overlap → 2,905 chunks. Show `patent_chunks.jsonl` or `chunk_metadata.jsonl` line 1.
+2. **Embeddings (1 min):** MiniLM turns each chunk into 384 numbers. Chunks and questions use the same model, so they share one "meaning map." Show `embeddings.npy` shape (2905, 384).
+3. **Retrieval (1 min):** question → 384 numbers → dot product with all chunks → top 5. Open `search_vector`.
+4. **Generation (1 min):** threshold check → labeled prompt → GPT-4.1-mini at temperature 0.2 → citation check. Open `build_messages` and the status logic in `pipeline.py`.
+5. **Trust and failure handling (1 min):** no evidence means no LLM call; outages fall back; citations are checked. Open the sources panel in the app.
+
+### 11.6 If asked about the instructor reference material
+
+Say something like:
+> "The course provided reference notebooks for a NIST risk framework that used a different embedding model, a different language model and Euclidean distance. They aren't part of my patent project. My implementation uses MiniLM, cosine similarity and GPT-4.1-mini, and I wrote the retrieval and prompt logic myself."
+
+**Before the interview:** check where those files are on your machine. They aren't in this repository. If you did adapt any code from them, tell me, and I'll update this section.
+
+### 11.7 Interview Q&A (what I built, why, what I'd improve)
+
+Each answer has three parts. Keep it to 30–60 seconds, and only use the parts that are true for you.
+
+**Project overview**
+
+1. **Why RAG rather than fine-tuning?** *Built:* the pipeline retrieves passages and places them in the prompt; the LLM is not trained. *Why:* answers stay tied to source text, and the collection can change without retraining. *Improve:* better retrieval, since answers are only as good as the passages found.
+2. **Why AI patents?** *Built:* 33 patents from Google Patents, mostly AI/NLP. *Why:* dense technical text where different vocabulary is common, which is a fair test for meaning-based search. *Improve:* a larger, more representative corpus, and filtering off-topic items.
+3. **Why Python?** *Built:* the whole pipeline. *Why:* mature NLP, embedding and numerical libraries, and easy to inspect step by step. *Improve:* a typed API layer for production.
+4. **What is an embedding?** *Built:* 384 numbers per chunk and per question (MiniLM). *Why:* similar meanings get similar numbers. *Improve:* domain-tuned embeddings.
+5. **How does SentenceTransformers work?** *Built:* `SentenceTransformer("all-MiniLM-L6-v2").encode(texts)`. *Why:* one call gives a comparable vector. *Improve:* a larger model, or one trained on patents.
+6. **Why `all-MiniLM-L6-v2`?** *Built:* it's the model in notebook 03 and `config.py`. *Why:* small, fast, free to run locally, no data leaves the machine. *Improve:* it was trained on general text, and reads at most 256 tokens. Test a larger model with `evaluate.py`.
+7. **What is cosine similarity?** *Built:* the dot product of unit vectors. *Why:* it compares direction, so length doesn't matter. *Improve:* calibrate the threshold; raw scores aren't probabilities.
+8. **How does nearest-neighbor retrieval work?** *Built:* compare the question with every chunk, keep the top 5. *Why:* exact, simple, and fast at 2,905 chunks. *Improve:* approximate indexes (HNSW) at larger scale.
+9. **Why scikit-learn rather than a vector database?** *Built:* notebooks used `NearestNeighbors`; the app uses NumPy. *Why:* at this size, a database adds infrastructure without benefit. *Improve:* FAISS or pgvector once the corpus is much larger. Don't say you used FAISS.
+10. **Why split documents into chunks?** *Built:* 300-word windows. *Why:* a whole patent is too long to retrieve precisely or fit in a prompt. *Improve:* split by patent section and claim number.
+11. **How did you choose chunk size and overlap?** *Built:* 300 words, 50 overlap. *Why:* a middle ground between context and precision. This was not tuned against metrics. *Improve:* test several sizes with `build_index.py --chunk-size` and `evaluate.py`. Also mention that the model reads about 256 tokens.
+12. **What happens when a user submits a question?** *Built:* the flow in 11.4 #2. *Why:* each step can fail on its own and is handled. *Improve:* streaming answers and caching.
+13. **How do retrieved passages get into the prompt?** *Built:* `build_messages` numbers them S1–S5 inside tags. *Why:* the model can cite them and the app can check citations. *Improve:* token budgeting.
+14. **What if no relevant document exists?** *Built:* if the best score is below 0.30, the LLM is not called. *Why:* a language model will summarize irrelevant text if asked. *Improve:* calibrate the threshold on out-of-scope questions. CRISPR is the demo example.
+15. **How do you handle hallucinations?** *Built:* grounding rules, labeled sources, an insufficient-evidence reply, citation checks. *Why:* they make unsupported claims less likely and easier to spot. *Improve:* automatic claim-level checking. **They reduce hallucinations; they do not eliminate them.** In the v1.0 manual review, 6 of 8 answers had mild hallucinations.
+16. **How did you test retrieval quality?** *Built:* the 8 manual questions (8/8 had a relevant chunk in the top 5); a 39-query known-item set with a keyword baseline (Hit@1 0.94 on paraphrases, 0.38 on everyday wording). *Why:* different tests answer different questions. *Improve:* an independently labeled set; semantic results once `evaluate.py` is run. **Disclose that the 39 labels were AI-drafted.**
+17. **Biggest implementation challenges?** *Built/learned:* PDFs with no text layer needed OCR and manual pasting; boilerplate text pollutes search; there's no answer key for open-ended questions, so evaluation needed its own design. *Improve:* clean boilerplate; section-aware chunking.
+18. **What would change at one million patents?** *Built:* exact search. *Why it breaks:* a chunk matrix of 1M × 384 float32 numbers is about 1.5 GB, and brute-force search slows. *Change:* an approximate index (HNSW in FAISS or pgvector), metadata filters, re-ranking, incremental indexing, and a batch embedding pipeline.
+19. **How would you deploy for a government client?** *Built:* local only. *Plan:* containerize, put the pipeline behind an API, run on an approved cloud with a government-authorized LLM endpoint (for example Azure OpenAI in Azure Government), use SSO, store secrets in a vault. **[CONFIRM which endpoints your agency would accept]**
+20. **Security and privacy concerns?** *Built:* secrets in environment variables, `.env` is git-ignored, the server binds to localhost, errors are hidden in the UI, questions aren't logged. *Concerns:* questions and passages are sent to OpenAI; prompt injection; per-user access control if the corpus became restricted. *Improve:* data classification, a vetted model endpoint, access control at retrieval time, audit logs.
+21. **How would you monitor it?** *Built:* per-query status and timing logs. *Plan:* latency per stage, fallback and refusal rates, score distributions for drift, token cost, user feedback, and scheduled re-evaluation.
+22. **Local models vs. hosted APIs?** *Hosted (what you used):* stronger output, no hardware to run, but data leaves your environment and each call costs money. *Local:* data stays in-house and there's no per-call cost, but you need hardware, you maintain it, and output quality is usually lower. For government data, the choice depends on classification and policy.
+23. **How would you reduce latency and cost?** *Built:* retrieval is milliseconds; generation dominates (seconds). *Plan:* send fewer and shorter chunks, cache answers, use a smaller model for simple questions, and add re-ranking so fewer chunks are needed. **The per-question cost is an estimate, not a measurement.**
+24. **What code did you personally implement?** *Honest answer:* the notebooks 01–04 pipeline is yours. The package, interface, tests and scripts were built with AI assistance and reviewed by you. Name the functions in 11.4 and be ready to explain them.
+25. **How did you use AI coding assistants?** *Honest answer:* ChatGPT helped with some notebook snippets and text (model card). An AI coding assistant helped refactor the notebook logic into the package, build the interface, write tests and draft documentation and the evaluation set. You reviewed the design, ran the tests, and made the decisions about what to keep.
+26. **What would you improve with another month?** *Plan, in order:* clean boilerplate and chunk by patent section; run the semantic evaluation and tune chunking and the threshold on labeled data; add hybrid keyword + semantic search and a re-ranker; grade answers for claim-level support; put the pipeline behind an API with tests in CI.
+
+### 11.8 Demo readiness checks specific to this section
+
+- [ ] `python scripts/check_setup.py --ping` shows READY.
+- [ ] You can open each file in 11.4 and say what its first and last lines do.
+- [ ] You have run `python scripts/evaluate.py` and filled in the semantic numbers, or you are ready to say they are pending.
+- [ ] You have checked two or three patent titles in `data/patent_metadata.json` against Google Patents.
+- [ ] You know where the instructor reference files are on your machine, or you have decided not to mention them.
