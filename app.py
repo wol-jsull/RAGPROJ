@@ -18,7 +18,7 @@ from patent_rag.pipeline import ANSWERED, INSUFFICIENT, RECORDED, RETRIEVAL_ONLY
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
-st.set_page_config(page_title="AI Patent Research Assistant", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="AI Patent Research Assistant", layout="wide")
 
 EXAMPLE_QUESTIONS = [
     "How can a large language model be used to train or improve a smaller language model?",
@@ -114,7 +114,7 @@ with st.sidebar:
     )
 
 # ---------------------------------------------------------------- header
-st.title("🔎 AI Patent Research Assistant")
+st.title("AI Patent Research Assistant")
 st.markdown(
     f"Ask natural-language questions about a collection of **{len(patent_ids)} AI-related US patents and applications**. "
     "The assistant retrieves the most relevant patent passages and writes an answer grounded in them, "
