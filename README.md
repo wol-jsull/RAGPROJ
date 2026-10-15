@@ -132,6 +132,8 @@ Across **8 test questions**:
 Most hallucinations were minor expansions of what was implied but not stated.  
 One question (#6) resulted in moderate hallucination because retrieval pulled patents unrelated to multimodal inputs. Overall still well grounded at least in chunks pulled.
 
+<img width="661" height="790" alt="image" src="https://github.com/user-attachments/assets/54723985-70d0-44c9-9859-f882cd011224" />
+
 ---
 
 ## Ethical considerations and limitations
