@@ -46,9 +46,10 @@ def test_embedding_dimension_mismatch_is_detected(tiny_index):
 # ---------------------------------------------------------------- real index
 def test_real_index_loads_and_is_consistent():
     index = load_index(EMB, META)
-    assert index.size == 2905
+    txt_ids = {p.stem for p in (PROJECT_ROOT / "data" / "processed" / "txt").glob("*.txt")}
+    assert index.size > 0
     assert index.dimension == 384
-    assert len(index.patent_ids) == 33
+    assert set(index.patent_ids) == txt_ids  # every text file is indexed, nothing extra
     norms = np.linalg.norm(index.embeddings, axis=1)
     assert np.allclose(norms, 1.0, atol=1e-4)
 

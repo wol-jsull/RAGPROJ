@@ -109,6 +109,19 @@ Run both from the project root. The first run downloads the embedding model (~90
 3. *How does the attention-free transformer reduce computational cost compared with standard attention?*
 4. *What does this collection say about CRISPR gene editing in crops?* (out of scope: should decline)
 
+## Adding patents
+
+1. Download patent PDFs (for example from Google Patents) into `data/raw/patents/`, named by patent number (e.g. `US11222333B2.pdf`).
+2. Rebuild the index:
+   ```bash
+   python scripts/build_index.py
+   ```
+   This extracts text from new PDFs only, re-chunks, re-embeds all chunks, and adds draft entries to `data/patent_metadata.json`.
+3. Scanned PDFs with no text layer are skipped with a warning. OCR them and save the text as `data/processed/txt/<ID>.txt`, then rerun.
+4. Review the auto-added metadata (marked `"auto": true`) and restart the app.
+
+To undo a rebuild: `git checkout -- embeddings data` (then delete any new `.txt` files).
+
 ## Testing and evaluation
 
 ```bash

@@ -99,9 +99,9 @@ with st.sidebar:
     st.divider()
     with st.expander("How it works"):
         st.markdown(
-            """
+            f"""
 1. **Embed** your question into a 384-number vector with `all-MiniLM-L6-v2`.
-2. **Retrieve** the top-k most similar patent passages (cosine similarity) from 2,905 pre-embedded chunks.
+2. **Retrieve** the top-k most similar patent passages (cosine similarity) from {index_size:,} pre-embedded chunks.
 3. **Gate**: if no passage clears the relevance threshold, the assistant declines instead of guessing.
 4. **Generate**: the passages are labeled S1…Sn and sent to the LLM with instructions to answer *only*
    from them and cite labels inline.
@@ -116,7 +116,7 @@ with st.sidebar:
 # ---------------------------------------------------------------- header
 st.title("🔎 AI Patent Research Assistant")
 st.markdown(
-    "Ask natural-language questions about a collection of **33 AI-related US patents and applications**. "
+    f"Ask natural-language questions about a collection of **{len(patent_ids)} AI-related US patents and applications**. "
     "The assistant retrieves the most relevant patent passages and writes an answer grounded in them, "
     "with citations you can check."
 )
